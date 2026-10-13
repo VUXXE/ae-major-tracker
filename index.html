@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en" data-contrast="high">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alter Ego: Major Singapore 2026 VRS Radar | Valve Regional Standings Calculator</title>
+  <meta name="description" content="Live Valve Regional Standings (VRS) simulator and scenario calculator for Alter Ego CS2 qualifying for PGL Major Singapore 2026. Track points deltas, ECL Cup 3, and DFRAG Brisbane LAN.">
+  <meta name="keywords" content="Alter Ego, CS2, Counter-Strike 2, PGL Major Singapore 2026, Valve Regional Standings, VRS, BnTeT, PokemoN, adeX, laxiee, shadiy, ESL Challenger League, DFRAG">
+  <meta name="author" content="Alter Ego Esports Community">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://ae.asy.web.id/">
+  <meta name="theme-color" content="#101418">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Alter Ego VRS Radar">
+  <meta property="og:url" content="https://ae.asy.web.id/">
+  <meta property="og:title" content="Alter Ego: Major Singapore 2026 VRS Radar">
+  <meta property="og:description" content="Real-time Valve Regional Standings (VRS) simulation tool and cutoff radar for Alter Ego CS2 on their qualification road to PGL Major Singapore 2026.">
+  <meta property="og:image" content="https://ae.asy.web.id/assets/alter_ego_logo.png">
+  <meta property="og:image:width" content="200">
+  <meta property="og:image:height" content="200">
+  <meta property="og:image:alt" content="Alter Ego Esports Logo">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Alter Ego: Major Singapore 2026 VRS Radar">
+  <meta name="twitter:description" content="Calculate qualification scenarios, matchday points deltas, and regional rankings for Alter Ego CS2.">
+  <meta name="twitter:image" content="https://ae.asy.web.id/assets/alter_ego_logo.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/alter_ego_logo.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SportsTeam",
+        "@id": "https://ae.asy.web.id/#team",
+        "name": "Alter Ego",
+        "sport": "Counter-Strike 2",
+        "logo": "https://ae.asy.web.id/assets/alter_ego_logo.png",
+        "url": "https://ae.asy.web.id/",
+        "coach": {
+          "@type": "Person",
+          "name": "Andrew Joseph",
+          "alternateName": "bali"
+        },
+        "member": [
+          { "@type": "Person", "name": "Saad Ahmad", "alternateName": "PokemoN", "roleName": "In-Game Leader" },
+          { "@type": "Person", "name": "Hansel Ferdinand", "alternateName": "BnTeT", "roleName": "Rifler / Support" },
+          { "@type": "Person", "name": "Adelin Nica", "alternateName": "adeX", "roleName": "AWPer" },
+          { "@type": "Person", "name": "Maks Andryei", "alternateName": "laxiee", "roleName": "Rifler" },
+          { "@type": "Person", "name": "Mārtiņš Gūtmanis", "alternateName": "shadiy", "roleName": "Rifler" },
+          { "@type": "Person", "name": "Zain Talha", "alternateName": "Bloody", "roleName": "Substitute" }
+        ]
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://ae.asy.web.id/#app",
+        "name": "Alter Ego VRS Major Radar",
+        "url": "https://ae.asy.web.id/",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "All",
+        "description": "Interactive Valve Regional Standings (VRS) simulator calculating Alter Ego qualification chances for PGL Major Singapore 2026."
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-bg-dark text-text-primary font-sans antialiased min-h-screen p-3 sm:p-5">
+
+  <div class="max-w-[1240px] mx-auto space-y-4">
+
+    <!-- HLTV-Style Team Profile Header -->
+    <header class="bg-card-bg border border-card-border rounded-[2px] p-3.5 sm:p-4">
+      <div class="flex flex-col lg:flex-row justify-between lg:items-center gap-4 pb-3.5 border-b border-card-border-subtle">
+        <!-- Team Identity -->
+        <div class="flex items-center gap-4">
+          <img src="/assets/alter_ego_logo.png" alt="Alter Ego Esports" class="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0">
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-text-primary">Alter Ego</h1>
+              <span class="text-[11px] font-bold text-accent-red uppercase tracking-wider bg-accent-red-bg px-1.5 py-0.5 rounded-[2px] border border-accent-red/30">CS2 Team</span>
+              <span class="text-[11px] font-bold text-accent-blue uppercase tracking-wider bg-accent-blue-bg px-1.5 py-0.5 rounded-[2px] border border-accent-blue/30">VRS Radar</span>
+              <span id="liveSyncStatus" class="inline-flex items-center gap-1.5 text-[11px] text-text-secondary font-bold ml-1" role="status" aria-live="polite">
+                <span class="w-2 h-2 rounded-full bg-accent-gold inline-block shrink-0" aria-hidden="true"></span>
+                <span>HLTV API: Syncing live telemetry...</span>
+              </span>
+            </div>
+            <div class="text-xs text-text-muted mt-1 flex items-center gap-2 flex-wrap">
+              <span>Coach: <strong class="text-text-secondary" id="teamCoachName">Andrew "bali" Joseph</strong></span>
+              <span>•</span>
+              <span>Region: <strong class="text-text-secondary">Asia-Pacific</strong></span>
+              <span>•</span>
+              <span>Target: <strong class="text-text-primary">PGL Major Singapore 2026</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- HLTV Valve Regional Standing Box, Countdown & Manual Sync -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          <!-- VRS Ranking Box -->
+          <div class="bg-card-surface border border-card-border rounded-[2px] p-2 sm:px-3 sm:py-2 text-xs flex flex-col justify-center">
+            <div class="text-[10px] text-text-muted uppercase font-bold tracking-wider">Valve & HLTV Standings</div>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span class="text-base font-extrabold text-text-primary tabular-nums" id="projectedAsiaRankTop">#13 Asia</span>
+              <span class="text-xs text-text-secondary tabular-nums" id="projectedWorldRankTop">(#133 VRS • #120 HLTV)</span>
+            </div>
+          </div>
+
+          <!-- Countdown Tile -->
+          <div class="bg-card-surface border border-card-border rounded-[2px] p-2 sm:px-3 sm:py-2 text-xs flex flex-col justify-center" role="timer" aria-label="Official Snapshot Countdown">
+            <div class="flex justify-between items-center text-[10px] text-text-muted uppercase font-bold tracking-wider gap-3">
+              <span>Nov 2 Snapshot</span>
+              <span class="text-accent-gold font-bold">00:00 UTC</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5 font-bold tabular-nums text-sm text-accent-gold">
+              <span id="countdownDays">--</span><span class="text-[10px] text-text-muted">d</span>
+              <span>:</span>
+              <span id="countdownHours">--</span><span class="text-[10px] text-text-muted">h</span>
+              <span>:</span>
+              <span id="countdownMins">--</span><span class="text-[10px] text-text-muted">m</span>
+              <span>:</span>
+              <span id="countdownSecs">--</span><span class="text-[10px] text-text-muted">s</span>
+            </div>
+            <span class="sr-only" id="countdownTimer"></span>
+          </div>
+
+          <button type="button" id="refreshTelemetryBtn" class="btn-action" aria-label="Refresh live HLTV telemetry">
+            <span>Sync HLTV</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Telemetry Error / Fallback Banner (R-27) -->
+      <div id="telemetryBanner" class="hidden mt-3 p-2.5 bg-card-surface border border-accent-gold rounded-[2px] text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2" role="alert">
+        <div class="text-text-secondary" id="telemetryBannerText">
+          Live HLTV endpoint is unreachable. Displaying verified October 13 baseline standings and match schedules.
+        </div>
+        <button type="button" id="retryTelemetryBtn" class="btn-action shrink-0">
+          Retry Live Sync
+        </button>
+      </div>
+
+      <!-- HLTV Qualification Target Bar -->
+      <div class="pt-2.5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
+        <div class="text-text-secondary">
+          <span class="font-bold text-text-primary uppercase tracking-wider mr-1">Major Cutoff Requirement:</span>
+          Reach <strong class="text-text-primary">1,191 pts</strong> by Nov 2. Baseline: <strong class="text-text-primary" id="baselinePointsLabel">866 pts</strong> (Deficit: <strong id="deficitPoints" class="text-accent-red font-bold">-325 pts needed</strong> to lock Top 5 direct slot).
+        </div>
+        <div class="text-text-muted text-[11px] font-semibold flex items-center gap-2 flex-wrap">
+          <span id="nextMatchSummary">Next Match: <strong class="text-text-secondary">vs. Just Swing</strong> (Oct 13, 15:00)</span>
+          <a id="nextMatchLink" href="https://www.hltv.org/matches/2399174/just-swing-vs-alter-ego-esl-challenger-league-season-52-asia-pacific-cup-3" target="_blank" rel="noopener noreferrer" class="link-action">HLTV Match #2399174</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- HLTV-Style Squad Lineup (Horizontal Lineup Strip) -->
+    <section class="bg-card-bg border border-card-border rounded-[2px] p-3 sm:p-3.5" aria-label="Team Lineup">
+      <div class="flex justify-between items-center pb-2 mb-2.5 border-b border-card-border-subtle">
+        <div class="text-xs font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
+          <span>Active Lineup & Stand-in</span>
+          <span class="text-[10px] text-text-muted font-normal">(Valve Snapshot Roster)</span>
+        </div>
+        <div class="text-[11px] text-text-muted">
+          5 Core Active • 1 ECL Substitute
+        </div>
+      </div>
+
+      <!-- 6-Player HLTV Lineup Strip -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2 sm:gap-2.5">
+        <!-- #01 PokemoN (IGL / Captain) -->
+        <article class="bg-card-surface border border-card-border rounded-[2px] overflow-hidden flex flex-col hover:border-card-border/80 transition-colors">
+          <div class="h-[145px] sm:h-[155px] bg-gradient-to-b from-[#1b222a] to-[#12161c] relative flex items-end justify-center overflow-hidden border-b border-card-border-subtle">
+            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-text-muted tabular-nums bg-bg-dark/80 px-1 py-0.5 rounded-[2px]">#01</span>
+            <img src="/assets/pokemon.png" alt="Saad 'PokemoN' Ahmad" class="h-full w-full object-contain object-bottom drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          </div>
+          <div class="p-2 sm:p-2.5 flex flex-col gap-0.5 flex-1">
+            <div class="flex items-center justify-between gap-1 leading-tight">
+              <span class="text-sm font-bold text-text-primary">PokemoN</span>
+              <img src="/assets/flags/pk.svg" alt="Pakistan" class="w-3.5 h-2.5 object-cover rounded-[1px] border border-card-border shrink-0">
+            </div>
+            <div class="text-[11px] text-text-muted leading-tight">Saad Ahmad</div>
+            <div class="text-[10px] font-bold text-accent-red uppercase tracking-wider mt-0.5">IGL / Captain</div>
+            <div class="mt-2 pt-1.5 border-t border-card-border-subtle flex justify-between items-center text-[10px] font-bold tabular-nums">
+              <span class="text-text-muted">Rating: <strong class="text-accent-green font-bold" data-player-rating="pokemon">1.11</strong></span>
+              <span class="text-text-muted">DPR: <strong class="text-text-secondary" data-player-dpr="pokemon">80.5</strong></span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-text-muted tabular-nums">
+              <span>KPR: <strong class="text-text-secondary" data-player-kpr="pokemon">0.73</strong></span>
+              <span data-player-maps="pokemon">302 maps</span>
+            </div>
+            <a href="https://www.hltv.org/stats/players/18223/pokemon" target="_blank" rel="noopener noreferrer" class="link-action mt-1.5 w-full justify-center">HLTV Stats</a>
+          </div>
+        </article>
+
+        <!-- #02 BnTeT -->
+        <article class="bg-card-surface border border-card-border rounded-[2px] overflow-hidden flex flex-col hover:border-card-border/80 transition-colors">
+          <div class="h-[145px] sm:h-[155px] bg-gradient-to-b from-[#1b222a] to-[#12161c] relative flex items-end justify-center overflow-hidden border-b border-card-border-subtle">
+            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-text-muted tabular-nums bg-bg-dark/80 px-1 py-0.5 rounded-[2px]">#02</span>
+            <img src="/assets/bntet.png" alt="Hansel 'BnTeT' Ferdinand" class="h-full w-full object-contain object-bottom drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          </div>
+          <div class="p-2 sm:p-2.5 flex flex-col gap-0.5 flex-1">
+            <div class="flex items-center justify-between gap-1 leading-tight">
+              <span class="text-sm font-bold text-text-primary">BnTeT</span>
+              <img src="/assets/flags/id.svg" alt="Indonesia" class="w-3.5 h-2.5 object-cover rounded-[1px] border border-card-border shrink-0">
+            </div>
+            <div class="text-[11px] text-text-muted leading-tight">Hansel Ferdinand</div>
+            <div class="text-[10px] font-semibold text-text-secondary uppercase tracking-wider mt-0.5">Rifler / Support</div>
+            <div class="mt-2 pt-1.5 border-t border-card-border-subtle flex justify-between items-center text-[10px] font-bold tabular-nums">
+              <span class="text-text-muted">Rating: <strong class="text-accent-green font-bold" data-player-rating="bntet">1.13</strong></span>
+              <span class="text-text-muted">DPR: <strong class="text-text-secondary" data-player-dpr="bntet">81.8</strong></span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-text-muted tabular-nums">
+              <span>KPR: <strong class="text-text-secondary" data-player-kpr="bntet">0.75</strong></span>
+              <span data-player-maps="bntet">1213 maps</span>
+            </div>
+            <a href="https://www.hltv.org/stats/players/7131/bntet" target="_blank" rel="noopener noreferrer" class="link-action mt-1.5 w-full justify-center">HLTV Stats</a>
+          </div>
+        </article>
+
+        <!-- #03 adeX -->
+        <article class="bg-card-surface border border-card-border rounded-[2px] overflow-hidden flex flex-col hover:border-card-border/80 transition-colors">
+          <div class="h-[145px] sm:h-[155px] bg-gradient-to-b from-[#1b222a] to-[#12161c] relative flex items-end justify-center overflow-hidden border-b border-card-border-subtle">
+            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-text-muted tabular-nums bg-bg-dark/80 px-1 py-0.5 rounded-[2px]">#03</span>
+            <img src="/assets/adex.png" alt="Adelin 'adeX' Nica" class="h-full w-full object-contain object-bottom drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          </div>
+          <div class="p-2 sm:p-2.5 flex flex-col gap-0.5 flex-1">
+            <div class="flex items-center justify-between gap-1 leading-tight">
+              <span class="text-sm font-bold text-text-primary">adeX</span>
+              <img src="/assets/flags/ro.svg" alt="Romania" class="w-3.5 h-2.5 object-cover rounded-[1px] border border-card-border shrink-0">
+            </div>
+            <div class="text-[11px] text-text-muted leading-tight">Adelin Nica</div>
+            <div class="text-[10px] font-semibold text-text-secondary uppercase tracking-wider mt-0.5">AWPer</div>
+            <div class="mt-2 pt-1.5 border-t border-card-border-subtle flex justify-between items-center text-[10px] font-bold tabular-nums">
+              <span class="text-text-muted">Rating: <strong class="text-accent-green font-bold" data-player-rating="adex">1.15</strong></span>
+              <span class="text-text-muted">DPR: <strong class="text-text-secondary" data-player-dpr="adex">77.9</strong></span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-text-muted tabular-nums">
+              <span>KPR: <strong class="text-text-secondary" data-player-kpr="adex">0.77</strong></span>
+              <span data-player-maps="adex">291 maps</span>
+            </div>
+            <a href="https://www.hltv.org/stats/players/21211/adex" target="_blank" rel="noopener noreferrer" class="link-action mt-1.5 w-full justify-center">HLTV Stats</a>
+          </div>
+        </article>
+
+        <!-- #04 laxiee -->
+        <article class="bg-card-surface border border-card-border rounded-[2px] overflow-hidden flex flex-col hover:border-card-border/80 transition-colors">
+          <div class="h-[145px] sm:h-[155px] bg-gradient-to-b from-[#1b222a] to-[#12161c] relative flex items-end justify-center overflow-hidden border-b border-card-border-subtle">
+            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-text-muted tabular-nums bg-bg-dark/80 px-1 py-0.5 rounded-[2px]">#04</span>
+            <img src="/assets/laxiee.png" alt="Maks 'laxiee' Andryei" class="h-full w-full object-contain object-bottom drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          </div>
+          <div class="p-2 sm:p-2.5 flex flex-col gap-0.5 flex-1">
+            <div class="flex items-center justify-between gap-1 leading-tight">
+              <span class="text-sm font-bold text-text-primary">laxiee</span>
+              <img src="/assets/flags/mn.svg" alt="Mongolia" class="w-3.5 h-2.5 object-cover rounded-[1px] border border-card-border shrink-0">
+            </div>
+            <div class="text-[11px] text-text-muted leading-tight">Maks Andryei</div>
+            <div class="text-[10px] font-semibold text-text-secondary uppercase tracking-wider mt-0.5">Rifler</div>
+            <div class="mt-2 pt-1.5 border-t border-card-border-subtle flex justify-between items-center text-[10px] font-bold tabular-nums">
+              <span class="text-text-muted">Rating: <strong class="text-accent-green font-bold" data-player-rating="laxiee">1.11</strong></span>
+              <span class="text-text-muted">DPR: <strong class="text-text-secondary" data-player-dpr="laxiee">78.8</strong></span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-text-muted tabular-nums">
+              <span>KPR: <strong class="text-text-secondary" data-player-kpr="laxiee">0.74</strong></span>
+              <span data-player-maps="laxiee">365 maps</span>
+            </div>
+            <a href="https://www.hltv.org/stats/players/23458/laxiee" target="_blank" rel="noopener noreferrer" class="link-action mt-1.5 w-full justify-center">HLTV Stats</a>
+          </div>
+        </article>
+
+        <!-- #05 shadiy -->
+        <article class="bg-card-surface border border-card-border rounded-[2px] overflow-hidden flex flex-col hover:border-card-border/80 transition-colors">
+          <div class="h-[145px] sm:h-[155px] bg-gradient-to-b from-[#1b222a] to-[#12161c] relative flex items-end justify-center overflow-hidden border-b border-card-border-subtle">
+            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-text-muted tabular-nums bg-bg-dark/80 px-1 py-0.5 rounded-[2px]">#05</span>
+            <img src="/assets/shadiy.png" alt="Mārtiņš 'shadiy' Gūtmanis" class="h-full w-full object-contain object-bottom drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          </div>
+          <div class="p-2 sm:p-2.5 flex flex-col gap-0.5 flex-1">
+            <div class="flex items-center justify-between gap-1 leading-tight">
+              <span class="text-sm font-bold text-text-primary">shadiy</span>
+              <img src="/assets/flags/lv.svg" alt="Latvia" class="w-3.5 h-2.5 object-cover rounded-[1px] border border-card-border shrink-0">
+            </div>
+            <div class="text-[11px] text-text-muted leading-tight">Mārtiņš Gūtmanis</div>
+            <div class="text-[10px] font-semibold text-text-secondary uppercase tracking-wider mt-0.5">Rifler</div>
+            <div class="mt-2 pt-1.5 border-t border-card-border-subtle flex justify-between items-center text-[10px] font-bold tabular-nums">
+              <span class="text-text-muted">Rating: <strong class="text-accent-green font-bold" data-player-rating="shadiy">1.18</strong></span>
+              <span class="text-text-muted">DPR: <strong class="text-text-secondary" data-player-dpr="shadiy">80.6</strong></span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-text-muted tabular-nums">
+              <span>KPR: <strong class="text-text-secondary" data-player-kpr="shadiy">0.75</strong></span>
+              <span data-player-maps="shadiy">383 maps</span>
+            </div>
+            <a href="https://www.hltv.org/stats/players/20003/shadiy" target="_blank" rel="noopener noreferrer" class="link-action mt-1.5 w-full justify-center">HLTV Stats</a>
+          </div>
+        </article>
+
+        <!-- #SUB Bloody (ECL Stand-in) -->
+        <article class="bg-card-surface border border-card-border rounded-[2px] overflow-hidden flex flex-col hover:border-card-border/80 transition-colors">
+          <div class="h-[145px] sm:h-[155px] bg-gradient-to-b from-[#1b222a] to-[#12161c] relative flex items-end justify-center overflow-hidden border-b border-card-border-subtle p-2">
+            <span class="absolute top-1.5 left-1.5 text-[9px] font-bold text-accent-blue tabular-nums bg-bg-dark/80 px-1 py-0.5 rounded-[2px]">#SUB</span>
+            <img src="/assets/bloody.png" alt="Zain 'Bloody' Talha" class="h-full w-full object-contain object-bottom drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)]">
+          </div>
+          <div class="p-2 sm:p-2.5 flex flex-col gap-0.5 flex-1">
+            <div class="flex items-center justify-between gap-1 leading-tight">
+              <span class="text-sm font-bold text-text-primary">Bloody</span>
+              <img src="/assets/flags/pk.svg" alt="Pakistan" class="w-3.5 h-2.5 object-cover rounded-[1px] border border-card-border shrink-0">
+            </div>
+            <div class="text-[11px] text-text-muted leading-tight">Zain Talha</div>
+            <div class="text-[10px] font-semibold text-accent-blue uppercase tracking-wider mt-0.5">ECL Stand-in</div>
+            <div class="mt-2 pt-1.5 border-t border-card-border-subtle flex justify-between items-center text-[10px] font-bold tabular-nums">
+              <span class="text-text-muted">Rating: <strong class="text-accent-green font-bold" data-player-rating="bloody">1.17</strong></span>
+              <span class="text-text-muted">DPR: <strong class="text-text-secondary" data-player-dpr="bloody">85.4</strong></span>
+            </div>
+            <div class="flex justify-between items-center text-[10px] text-text-muted tabular-nums">
+              <span>KPR: <strong class="text-text-secondary" data-player-kpr="bloody">0.79</strong></span>
+              <span data-player-maps="bloody">154 maps</span>
+            </div>
+            <a href="https://www.hltv.org/stats/players/23956/bloody" target="_blank" rel="noopener noreferrer" class="link-action mt-1.5 w-full justify-center">HLTV Stats</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Key Telemetry Overview Row (HLTV Metrics) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3" role="region" aria-label="Key Telemetry Indicators">
+      <div class="bg-card-bg border border-card-border rounded-[2px] p-2.5 sm:p-3">
+        <div class="text-[10px] text-text-muted uppercase font-bold tracking-wider">Major Qualification Probability</div>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-xl sm:text-2xl font-extrabold text-text-primary tabular-nums" id="probPercent">2%</span>
+          <span class="text-[10px] font-bold uppercase px-1.5 py-0.2 rounded-[2px] bg-accent-red-bg text-accent-red" id="probBadge">Unlikely</span>
+        </div>
+        <div class="mt-2 bg-card-surface rounded-[2px] h-1.5 overflow-hidden" aria-hidden="true">
+          <div class="h-full w-[2%] bg-accent-red transition-all duration-300" id="probBarFill"></div>
+        </div>
+      </div>
+
+      <div class="bg-card-bg border border-card-border rounded-[2px] p-2.5 sm:p-3">
+        <div class="text-[10px] text-text-muted uppercase font-bold tracking-wider">Projected VRS Points</div>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-xl sm:text-2xl font-extrabold text-text-primary tabular-nums" id="projectedPts">866</span>
+          <span class="text-[10px] font-bold uppercase px-1.5 py-0.2 rounded-[2px] bg-card-surface text-text-secondary tabular-nums" id="ptsDelta">+0 pts</span>
+        </div>
+      </div>
+
+      <div class="bg-card-bg border border-card-border rounded-[2px] p-2.5 sm:p-3">
+        <div class="text-[10px] text-text-muted uppercase font-bold tracking-wider">Asia Regional Standing</div>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-xl sm:text-2xl font-extrabold text-text-primary tabular-nums" id="projectedAsiaRank">#13</span>
+          <span class="text-[10px] font-bold uppercase px-1.5 py-0.2 rounded-[2px] bg-card-surface text-text-secondary tabular-nums" id="rankDelta">Baseline</span>
+        </div>
+      </div>
+
+      <div class="bg-card-bg border border-card-border rounded-[2px] p-2.5 sm:p-3">
+        <div class="text-[10px] text-text-muted uppercase font-bold tracking-wider">Est. World Ranking</div>
+        <div class="flex items-baseline gap-2 mt-1">
+          <span class="text-xl sm:text-2xl font-extrabold text-text-primary tabular-nums" id="projectedWorldRank">#133</span>
+          <span class="text-[10px] font-bold uppercase px-1.5 py-0.2 rounded-[2px] bg-card-surface text-text-secondary tabular-nums" id="worldDelta">Baseline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Two-Column Layout (HLTV Matches + HLTV Ranking Table) -->
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-4">
+
+      <!-- Left: HLTV-Style Match Scenarios -->
+      <main class="space-y-3.5">
+        <div class="bg-card-bg border border-card-border rounded-[2px] p-3 sm:p-4">
+          <!-- Simulator Header & Presets -->
+          <div class="flex justify-between items-center pb-2.5 mb-3 border-b border-card-border-subtle flex-wrap gap-2">
+            <div>
+              <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-text-primary">VRS Matchday Simulator</h2>
+              <p class="text-[11px] text-text-muted">Simulate head-to-head outcomes to calculate points deltas</p>
+            </div>
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5 w-full sm:w-auto" role="group" aria-label="Scenario Presets">
+              <button class="btn-preset active w-full sm:w-auto text-center" data-preset="base">Baseline</button>
+              <button class="btn-preset w-full sm:w-auto text-center" data-preset="cup3_win">Cup 3 Win</button>
+              <button class="btn-preset w-full sm:w-auto text-center" data-preset="dfrag_win">DFRAG Win</button>
+              <button class="btn-preset w-full sm:w-auto text-center" data-preset="double_champ">Double Champion</button>
+            </div>
+          </div>
+
+          <!-- Tournament 1: ESL Challenger League S52 Cup 3 -->
+          <div class="border border-card-border rounded-[2px] mb-3 overflow-hidden">
+            <div class="bg-card-surface px-3 py-2 sm:py-2.5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 sm:gap-2 text-xs border-b border-card-border">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-bold text-xs sm:text-sm text-text-primary leading-tight" id="eclEventTitle">
+                  ESL Challenger League Season 52 Asia-Pacific Cup 3
+                </span>
+                <span id="eclStatusBadge" class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-[2px] bg-accent-green-bg text-accent-green border border-accent-green/30">Live • 15 Teams</span>
+              </div>
+              <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 flex-wrap text-[11px] text-text-muted">
+                <span id="eclDatesText">Oct 7th - Oct 14th 2026</span>
+                <span>Purse: <strong class="text-text-secondary font-semibold" id="eclPrizeText">$10,000</strong></span>
+                <a href="https://www.hltv.org/events/9383/esl-challenger-league-season-52-asia-pacific-cup-3" target="_blank" rel="noopener noreferrer" class="link-action">HLTV Event #9383</a>
+              </div>
+            </div>
+
+            <div class="p-2.5 space-y-2.5 bg-card-bg">
+              <!-- M1 (Completed) -->
+              <div class="p-2.5 bg-card-surface/50 border border-card-border-subtle rounded-[2px] space-y-2">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div class="space-y-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-xs font-bold text-text-primary" id="m1StageTitle">Lower Bracket Final vs. Chinggis Warriors</span>
+                      <span id="m1StatusBadge" class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-[2px] bg-card-surface text-text-secondary border border-card-border tabular-nums">Match over • 2-0</span>
+                    </div>
+                    <div class="text-[11px] text-text-muted" id="m1MetaText">
+                      Chinggis Warriors (#58 World VRS • #4 Asia • #61 HLTV • 1,201 pts) • Eliminated 4th ($1,000)
+                    </div>
+                    <div class="text-[11px] text-text-secondary font-semibold tabular-nums" id="m1MapSummary">
+                      Maps: Inferno 13-9, Dust2 13-9 (Ancient left over)
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2 flex-wrap shrink-0">
+                    <button type="button" id="m1VetoToggleBtn" class="btn-action" aria-expanded="false" aria-controls="m1VetoPanel">
+                      Map Veto (7)
+                    </button>
+                    <a href="https://www.hltv.org/matches/2399173/alter-ego-vs-chinggis-warriors-esl-challenger-league-season-52-asia-pacific-cup-3" target="_blank" rel="noopener noreferrer" class="link-action">HLTV #2399173</a>
+                    <span class="text-[11px] font-bold uppercase px-2.5 py-2.5 rounded-[2px] bg-accent-green-bg text-accent-green border border-accent-green/30 tabular-nums min-h-[44px] inline-flex items-center">Won 2-0 (+36 pts banked)</span>
+                  </div>
+                </div>
+                <div id="m1VetoPanel" class="hidden pt-2 border-t border-card-border-subtle text-[11px] text-text-secondary">
+                  <div class="font-bold text-text-primary uppercase text-[10px] tracking-wider mb-1">Official HLTV Map Veto Log (Press Esc to close)</div>
+                  <ol id="m1VetoList" class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-text-muted tabular-nums">
+                    <li>1. Chinggis Warriors removed Anubis</li>
+                    <li>2. Alter Ego removed Nuke</li>
+                    <li>3. Chinggis Warriors picked Inferno (13-9 AE)</li>
+                    <li>4. Alter Ego picked Dust2 (13-9 AE)</li>
+                    <li>5. Chinggis Warriors removed Mirage</li>
+                    <li>6. Alter Ego removed Cache</li>
+                    <li>7. Ancient was left over</li>
+                  </ol>
+                </div>
+              </div>
+
+              <!-- M2 (Next Match) -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 bg-card-surface/50 border border-accent-blue/40 rounded-[2px] gap-2">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-bold text-text-primary" id="m2StageTitle">Consolidation Final vs. Just Swing</span>
+                    <span id="m2StatusBadge" class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-[2px] bg-accent-blue-bg text-accent-blue border border-accent-blue/30 tabular-nums">Oct 13, 15:00 • Scheduled</span>
+                  </div>
+                  <div class="text-[11px] text-text-muted" id="m2MetaText">
+                    Just Swing (#172 World VRS • #17 Asia • #158 HLTV • 773 pts) • VRS Forecast: +14pt (#129) / -19pt (#139)
+                  </div>
+                  <div class="text-[11px] text-text-secondary font-semibold tabular-nums" id="m2MapSummary">
+                    Best of 3 (Online) * Consolidation final • Maps TBA (3 maps)
+                  </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full sm:w-auto">
+                  <a href="https://www.hltv.org/matches/2399174/just-swing-vs-alter-ego-esl-challenger-league-season-52-asia-pacific-cup-3" target="_blank" rel="noopener noreferrer" class="link-action justify-center">HLTV #2399174</a>
+                  <div class="grid grid-cols-2 sm:flex gap-1.5 shrink-0 w-full sm:w-auto" role="group" aria-label="Consolidation Final Outcome">
+                    <button class="toggle-opt" data-match="m2" data-val="win">Win (+14)</button>
+                    <button class="toggle-opt" data-match="m2" data-val="loss">Loss (-19)</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- M3 -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 bg-card-surface/50 border border-card-border-subtle rounded-[2px] gap-2">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-bold text-text-primary" id="m3StageTitle">Cup 3 Grand Final vs. Lynn Vision</span>
+                    <span id="m3StatusBadge" class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-[2px] bg-card-surface text-text-secondary border border-card-border tabular-nums">Oct 14, 15:00 • Scheduled</span>
+                  </div>
+                  <div class="text-[11px] text-text-muted" id="m3MetaText">
+                    Lynn Vision (#69 World VRS • #7 Asia • #39 HLTV • 1,154 pts) • 1st place ($5,000) + ECL Season Finals seed
+                  </div>
+                  <div class="text-[11px] text-text-secondary font-semibold tabular-nums" id="m3MapSummary">
+                    Lynn Vision vs. Just Swing/Alter Ego winner • Maps TBA (3 maps)
+                  </div>
+                </div>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0 w-full sm:w-auto">
+                  <a href="https://www.hltv.org/matches/2399175/lynn-vision-vs-tba-esl-challenger-league-season-52-asia-pacific-cup-3" target="_blank" rel="noopener noreferrer" class="link-action justify-center">HLTV #2399175</a>
+                  <div class="grid grid-cols-3 sm:flex gap-1.5 shrink-0 w-full sm:w-auto" role="group" aria-label="Cup 3 Grand Final Outcome">
+                    <button class="toggle-opt" data-match="m3" data-val="win">Champion (+72)</button>
+                    <button class="toggle-opt" data-match="m3" data-val="loss">Runner-Up (+20)</button>
+                    <button class="toggle-opt" data-match="m3" data-val="na">N/A</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tournament 2: DFRAG Invitational 2026 Brisbane LAN -->
+          <div class="border border-card-border rounded-[2px] overflow-hidden">
+            <div class="bg-card-surface px-3 py-2 sm:py-2.5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 sm:gap-2 text-xs border-b border-card-border">
+              <div class="font-bold text-xs sm:text-sm text-text-primary leading-tight">
+                DFRAG Invitational 2026 (Brisbane LAN)
+              </div>
+              <div class="flex items-center gap-2 sm:gap-2.5 shrink-0 whitespace-nowrap text-[11px] text-text-muted">
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-[2px] bg-accent-gold-bg text-accent-gold whitespace-nowrap shrink-0">LAN Multiplier</span>
+                <span>Purse: <strong class="text-text-secondary font-semibold">$28,440</strong></span>
+              </div>
+            </div>
+
+            <div class="p-2.5 space-y-2 bg-card-bg">
+              <!-- DFRAG Group -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2 bg-card-surface/50 border border-card-border-subtle rounded-[2px] gap-2">
+                <div>
+                  <div class="text-xs font-bold text-text-primary">Group Stage Performance</div>
+                  <div class="text-[11px] text-text-muted">GSL Bo3 vs Ground Zero / Abyssal / Qualifiers</div>
+                </div>
+                <div class="grid grid-cols-3 sm:flex gap-1.5 shrink-0 w-full sm:w-auto" role="group" aria-label="DFRAG Group Stage Outcome">
+                  <button class="toggle-opt" data-match="df_group" data-val="1">1st Seed (+40)</button>
+                  <button class="toggle-opt" data-match="df_group" data-val="2">Advance 2nd (+20)</button>
+                  <button class="toggle-opt" data-match="df_group" data-val="0">Exit (-15)</button>
+                </div>
+              </div>
+
+              <!-- DFRAG Playoff Bounty 1 -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2 bg-card-surface/50 border border-card-border-subtle rounded-[2px] gap-2">
+                <div>
+                  <div class="text-xs font-bold text-text-primary">Playoffs vs. NEXVOID</div>
+                  <div class="text-[11px] text-text-muted">LAN bounty match (NEXVOID 1,008 pts)</div>
+                </div>
+                <div class="grid grid-cols-3 sm:flex gap-1.5 shrink-0 w-full sm:w-auto" role="group" aria-label="Playoff vs NEXVOID Outcome">
+                  <button class="toggle-opt" data-match="df_nex" data-val="win">Win (+55)</button>
+                  <button class="toggle-opt" data-match="df_nex" data-val="loss">Loss (-10)</button>
+                  <button class="toggle-opt" data-match="df_nex" data-val="na">N/A</button>
+                </div>
+              </div>
+
+              <!-- DFRAG Playoff Bounty 2 -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2 bg-card-surface/50 border border-card-border-subtle rounded-[2px] gap-2">
+                <div>
+                  <div class="text-xs font-bold text-text-primary">Playoffs vs. FlyQuest</div>
+                  <div class="text-[11px] text-text-muted">Top seed LAN clash (FlyQuest 1,191 pts)</div>
+                </div>
+                <div class="grid grid-cols-3 sm:flex gap-1.5 shrink-0 w-full sm:w-auto" role="group" aria-label="Playoff vs FlyQuest Outcome">
+                  <button class="toggle-opt" data-match="df_fq" data-val="win">Win (+75)</button>
+                  <button class="toggle-opt" data-match="df_fq" data-val="loss">Loss (-12)</button>
+                  <button class="toggle-opt" data-match="df_fq" data-val="na">N/A</button>
+                </div>
+              </div>
+
+              <!-- DFRAG Final Placement -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-2 bg-card-surface/50 border border-card-border-subtle rounded-[2px] gap-2">
+                <div>
+                  <div class="text-xs font-bold text-text-primary">Brisbane LAN Grand Final</div>
+                  <div class="text-[11px] text-text-muted">1st Place ($14,220 prize money weight)</div>
+                </div>
+                <div class="grid grid-cols-3 sm:flex gap-1.5 shrink-0 w-full sm:w-auto" role="group" aria-label="DFRAG LAN Final Placement Outcome">
+                  <button class="toggle-opt" data-match="df_place" data-val="champ">Champion (+60)</button>
+                  <button class="toggle-opt" data-match="df_place" data-val="2nd">2nd (+25)</button>
+                  <button class="toggle-opt" data-match="df_place" data-val="na">N/A</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HLTV Telemetry Footer Note -->
+        <div class="p-3 bg-card-bg border border-card-border rounded-[2px] text-xs text-text-muted leading-relaxed">
+          <strong class="text-text-primary">Valve Regional Standings Regulations:</strong> Calculations reflect Valve Head-to-Head win bounties, prize purse weighting ($10,000 online vs $28,440 LAN), opponent rank at match time, and decay. The official snapshot for PGL Major Singapore invitations is computed on <strong class="text-text-primary">November 2, 2026</strong>.
+        </div>
+      </main>
+
+      <!-- Right: HLTV Asia VRS Standings Table -->
+      <aside class="space-y-3">
+        <div class="bg-card-bg border border-card-border rounded-[2px] p-3 sm:p-3.5">
+          <div class="flex justify-between items-center pb-2 mb-2.5 border-b border-card-border-subtle">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-text-primary">Asia VRS Ranking</h2>
+            <span class="text-[10px] font-bold text-accent-gold uppercase">Top 5 Invited</span>
+          </div>
+
+          <!-- HLTV Search Bar -->
+          <div class="mb-2.5">
+            <input
+              type="search"
+              class="w-full bg-card-surface border border-control-border text-text-primary px-3 py-2 rounded-[2px] text-xs font-sans placeholder:text-text-muted min-h-[44px]"
+              id="teamSearchInput"
+              placeholder="Search teams (e.g. Alter Ego, FlyQuest)..."
+              aria-label="Filter teams in standings"
+            >
+
+          <!-- Standings Table -->
+          <div class="overflow-x-auto w-full">
+            <table class="rankings-table w-full border-collapse">
+              <thead>
+                <tr class="border-b border-card-border bg-card-surface/70 text-text-muted text-[10px] uppercase font-bold text-left">
+                  <th class="py-1.5 px-2.5 text-center w-8">#</th>
+                  <th class="py-1.5 px-2.5">Team</th>
+                  <th class="py-1.5 px-2.5 text-right">Pts</th>
+                  <th class="py-1.5 px-2.5 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboardBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+            <div id="emptySearchState" class="p-4 text-center text-text-muted text-xs bg-card-surface rounded-[2px] mt-2 border border-card-border-subtle" style="display: none;">
+              <p class="text-text-primary font-bold mb-1">No matching teams found</p>
+              <p class="text-[11px] text-text-muted mb-2.5">No teams found matching "<span id="emptySearchQueryText" class="text-text-secondary font-semibold"></span>".</p>
+              <button type="button" id="resetSearchBtn" class="btn-action">
+                Reset Filter
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-2.5 p-2 bg-card-surface/60 rounded-[2px] text-[10px] text-text-muted leading-tight border border-card-border-subtle">
+            * Note: BC.Game regional eligibility is subject to Valve 3-month regional residency lock. If ineligible, slot cascades to #6.
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
